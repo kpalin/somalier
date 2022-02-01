@@ -1002,8 +1002,6 @@ proc rel_main*() =
   if not opts.output_prefix.endswith(".") or opts.output_prefix.endswith("/"):
     opts.output_prefix &= '.'
 
-  let include_all = getEnv("SOMALIER_REPORT_ALL_PAIRS") != ""
-
   var t0 = cpuTime()
   var final = read_extracted(opts.extracted, min_ab, min_depth, unk2hr)
   var n_samples = final.samples.len
@@ -1043,8 +1041,15 @@ proc rel_main*() =
 
   var rels: seq[relations]
 
-  var proportion_sampled = 200_000'f64 / float64(final.samples.len *
-      final.samples.len)
+  var proportion_sampled = 200_000'f64 / float64(final.samples.len * final.samples.len)
+  if getEnv("SOMALIER_SAMPLE_RATE") != "":
+    try:
+       proportion_sampled = parseFloat(getEnv("SOMALIER_SAMPLE_RATE"))
+       stderr.write_line &"[somalier] got sampling rate {proportion_sampled} from env var"
+    except:
+      stderr.write_line &"[somalier] couldn't parse float for SOMALIER_SAMPLE_RATE which was {getEnv(\"SOMALIER_SAMPLE_RATE\")}"
+      raise
+
   if proportion_sampled < 1:
     stderr.write_line &"[somalier] html and text output will have unrelated sample-pairs subset to {100 * proportion_sampled:.2f}% of points"
 
