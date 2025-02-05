@@ -1,0 +1,16 @@
+Bootstrap: docker
+From: brentp/musl-hts-nim:latest
+Stage: spython-base
+
+%post
+
+# for nextflow
+apk add bash procps openblas
+
+
+#%environment
+#export somalier_ancestry_labels=/ancestry_labels-1kg.tsv
+%runscript
+exec /bin/bash "$@"
+%startscript
+exec /bin/bash "$@"
