@@ -14,7 +14,7 @@ import json
 import ./litestats
 import math
 import pedfile
-import ./results_html
+#import ./results_html
 import ./common
 import ./estimate_contamination
 
@@ -1032,14 +1032,14 @@ proc rel_main*() =
     quit "couldn't open output file"
   if not open(fh_samples, opts.output_prefix & "samples.tsv", fmWrite):
     quit "couldn't open output file"
-  if not open(fh_html, opts.output_prefix & "html", fmWrite):
-    quit "couldn't open html output file"
+  # if not open(fh_html, opts.output_prefix & "html", fmWrite):
+  #   quit "couldn't open html output file"
 
   t0 = cpuTime()
 
-  var tmpls = tmpl_html.split("<INPUT_JSON>")
-  fh_html.write(tmpls[0].replace("<SAMPLE_JSON>", toj(final.samples,
-      final.stats, final.gt_counts, samples.to_sex_lookup)))
+  # var tmpls = tmpl_html.split("<INPUT_JSON>")
+  # fh_html.write(tmpls[0].replace("<SAMPLE_JSON>", toj(final.samples,
+  #     final.stats, final.gt_counts, samples.to_sex_lookup)))
 
   var rels: seq[relations]
 
@@ -1109,9 +1109,9 @@ proc rel_main*() =
 
   stderr.write_line &"[somalier] time to calculate all vs all relatedness for all {npairs} combinations: {cpuTime() - t0:.2f}"
 
-  fh_html.write( %* rels)
-  fh_html.write(tmpls[1])
-  fh_html.close()
+  # fh_html.write( %* rels)
+  # fh_html.write(tmpls[1])
+  # fh_html.close()
   stderr.write_line(&"[somalier] wrote interactive HTML output for {nrels} pairs to: ",
       opts.output_prefix & "html")
 
